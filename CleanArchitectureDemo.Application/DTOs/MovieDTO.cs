@@ -9,6 +9,7 @@ public class CreateMovieRequest
     [Required]
     [Range(0, (double)decimal.MaxValue)]
     public decimal Cost { get; set; }
+    public bool IsPremium { get; set; }
 }
 
 public class UpdateMovieRequest
@@ -18,6 +19,7 @@ public class UpdateMovieRequest
     [Required]
     [Range(0, (double)decimal.MaxValue)]
     public decimal Cost { get; set; }
+    public bool IsPremium { get; set; }
 }
 
 public class MovieResponse
@@ -25,4 +27,6 @@ public class MovieResponse
     public Guid MovieId { get; set; }
     public string Name { get; set; } = string.Empty;
     public decimal Cost { get; set; }
+    public bool IsPremium { get; set; }
+    public bool IsAccessible { get; set; }
 }

@@ -11,5 +11,7 @@ namespace CleanArchitecture.Infrastructure.Identity
         public DateTime? RefreshTokenExpiryTime { get; set; }
         public DateTime CreateAt { get; set; }
         public DateTime UpdateAt { get; set; }
+        public bool IsPremiumUser { get; set; }
+        public DateTime? PremiumExpiry { get; set; }
     }
 }

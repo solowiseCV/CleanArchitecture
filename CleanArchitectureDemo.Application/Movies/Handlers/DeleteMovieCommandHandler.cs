@@ -11,13 +11,7 @@ public class DeleteMovieCommandHandler(IUnitOfWork unitOfWork)
 {
     public async Task<Unit> Handle(DeleteMovieCommand command, CancellationToken cancellationToken)
     {
-        var movie = await unitOfWork.Movies.GetByIdAsync(command.Id, cancellationToken);
-        
-        if (movie == null)
-        {
-            throw new NotFoundException(nameof(Movie), command.Id);
-        }
-
+        var movie = await unitOfWork.Movies.GetByIdAsync(command.Id, cancellationToken) ?? throw new NotFoundException(nameof(Movie), command.Id);
         unitOfWork.Movies.Delete(movie);
         await unitOfWork.CompleteAsync(cancellationToken);
 

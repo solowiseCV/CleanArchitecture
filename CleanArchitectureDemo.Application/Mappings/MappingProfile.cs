@@ -17,6 +17,9 @@ namespace CleanArchitecture.Application.Mappings
             CreateMap<UpdateMovieRequest, Movie>();
             CreateMap<UserRegisterRequest, ApplicationUserDto>();
 
+            // Payment Mappings
+            CreateMap<Payment, PaymentResponse>();
+
         }
     }
 }

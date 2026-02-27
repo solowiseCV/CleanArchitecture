@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using CleanArchitecture.Infrastructure.Identity;
 
 namespace CleanArchitecture.API.Extensions
 {
@@ -19,9 +20,9 @@ namespace CleanArchitecture.API.Extensions
         {
             c.SwaggerDoc("v1", new OpenApiInfo
             {
-                Title = "User Auth",
+                Title = "Movie Api",
                 Version = "v1",
-                Description = "Services to Authenticate user"
+                Description = "Movie Services to Authenticate user"
             });
 
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -50,7 +51,7 @@ namespace CleanArchitecture.API.Extensions
         });
         });
     }
-    // Allow any origin, method, and header
+   
     public static void ConfigureCors(this IServiceCollection services)
         {
             services.AddCors(options =>
@@ -67,7 +68,7 @@ namespace CleanArchitecture.API.Extensions
 
         public static void ConfigureIdentity(this IServiceCollection services)
         {
-            services.AddIdentityCore<CleanArchitecture.Infrastructure.Identity.ApplicationUser>(o =>
+            services.AddIdentityCore<ApplicationUser>(o =>
             {
                 o.Password.RequireNonAlphanumeric = false;
                 o.Password.RequireDigit = true;
@@ -78,7 +79,7 @@ namespace CleanArchitecture.API.Extensions
               .AddRoles<IdentityRole>()
               .AddEntityFrameworkStores<ApplicationDbContext>()
               .AddDefaultTokenProviders()
-              .AddSignInManager<SignInManager<CleanArchitecture.Infrastructure.Identity.ApplicationUser>>();
+              .AddSignInManager<SignInManager<ApplicationUser>>();
         }
 
 

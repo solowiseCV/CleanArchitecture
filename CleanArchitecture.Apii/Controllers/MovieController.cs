@@ -9,7 +9,7 @@ namespace CleanArchitecture.Api.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/v1/movies/")]
     public class MovieController(IMediator mediator) : ControllerBase
     {
         [AllowAnonymous]

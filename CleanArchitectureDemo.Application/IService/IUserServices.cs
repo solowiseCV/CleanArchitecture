@@ -16,5 +16,7 @@ namespace CleanArchitecture.Application.IService
         Task<CurrentUserResponse> RefreshTokenAsync(RefreshTokenRequest request);
 
         Task<UserResponse> LoginAsync(UserLoginRequest request);
+        Task<bool> IsPremiumAsync(string userId);
+        Task UpdatePremiumStatusAsync(string userId, bool isPremium);
     }
 }

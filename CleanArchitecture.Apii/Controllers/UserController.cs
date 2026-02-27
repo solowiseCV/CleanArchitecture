@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CleanArchitecture.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/v1/users")]
     public class UserController(IUserServices userServices) : ControllerBase
     {
         [HttpPost("register")]

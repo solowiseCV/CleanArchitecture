@@ -14,6 +14,7 @@
         public Guid MovieId { get; set; }
         public string Name { get; set; } = string.Empty;
         public decimal Cost { get; set; }
+        public bool IsPremium { get; set; }
 
     }
 }
