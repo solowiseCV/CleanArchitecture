@@ -1,6 +1,6 @@
-# Clean Architecture - Movie & Payment API
+# Clean Architecture - Movie & Payment API 
 
-A modern .NET API built using Clean Architecture principles, featuring movie management, user authentication, and integrated payment processing via Paystack.
+A modern  .NET API built using Clean Architecture principles, featuring movie management, user authentication, and integrated payment processing via Paystack.
 
 ## 📋 Overview
 
@@ -64,7 +64,94 @@ CleanArchitecture/
 └── CleanArchitecture.sln            # Solution file
 ```
 
-## 🚀 Getting Started
+## � Secrets & Configuration Management
+
+⚠️ **IMPORTANT: Never commit `appsettings.json` or `.env` files containing secrets to version control!**
+
+### Local Development Setup
+
+1. **Create `appsettings.Development.json`** in `CleanArchitecture.API/` (excluded from Git):
+   ```json
+   {
+     "ConnectionStrings": {
+       "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=MovieDb;Trusted_Connection=True;MultipleActiveResultSets=true"
+     },
+     "JwtSettings": {
+       "Key": "your_very_long_and_secure_secret_key_at_least_32_chars",
+       "ValidIssuer": "CleanArchitectureApi",
+       "ValidAudience": "CleanArchitectureClient",
+       "Expires": 60
+     },
+     "Paystack": {
+       "SecretKey": "sk_test_YOUR_TEST_SECRET_KEY",
+       "CallbackUrl": "https://localhost:5001/api/v1/payments/webhook"
+     },
+     "Serilog": {
+       "MinimumLevel": {
+         "Default": "Information"
+       }
+     }
+   }
+   ```
+
+2. **Using User Secrets (Recommended for local dev)**  
+   Instead of `appsettings.Development.json`, use .NET User Secrets:
+   ```bash
+   cd CleanArchitecture.API
+   dotnet user-secrets init
+   dotnet user-secrets set "JwtSettings:Key" "your_very_long_secure_key"
+   dotnet user-secrets set "Paystack:SecretKey" "sk_test_YOUR_KEY"
+   dotnet user-secrets set "Paystack:CallbackUrl" "https://localhost:5001/api/v1/payments/webhook"
+   ```
+   Secrets stored in `%APPDATA%\\Microsoft\\UserSecrets\\` are never committed.
+
+3. **Production Deployment**  
+   Use environment variables or your platform's secret management:
+   - **Docker**: Pass via `--env` or `.env` file (add `.env*` to `.gitignore`)
+   - **Azure**: Use Azure Key Vault
+   - **AWS**: Use AWS Secrets Manager
+   - **Local Server**: Set environment variables on the host
+
+### Gitignore Rules
+
+Currently configured to exclude:
+- `appsettings.*.json` – All environment-specific configs
+- `.env*` – Environment variable files
+
+Verify the following are in `.gitignore`:
+```gitignore
+appsettings.*.json
+appsettings.Development.json
+appsettings.Production.json
+*.env
+.env
+.env.local
+.env.*.local
+```
+
+### If Secrets Were Already Pushed
+
+If you've already committed `appsettings.json` with real keys:
+
+1. **Rotate all compromised secrets immediately:**
+   - Generate a new Paystack secret key in your dashboard
+   - Change the database password
+   - Invalidate old JWT key and regenerate
+
+2. **Remove from Git history:**
+   ```bash
+   # Remove from latest commit (if not yet pushed)
+   git rm --cached CleanArchitecture.API/appsettings.json
+   git commit --amend -m "Remove appsettings.json with secrets"
+   
+   # If already pushed, use git-filter-repo or BFG Repo-Cleaner
+   # (more involved, consult GitHub's removal docs)
+   ```
+
+3. **Add template file for developers:**
+   Create `appsettings.example.json` with placeholder values to guide setup.
+
+## �🚀 Getting Started
 
 ### Prerequisites
 
