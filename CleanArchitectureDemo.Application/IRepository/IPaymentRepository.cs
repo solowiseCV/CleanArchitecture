@@ -1,4 +1,5 @@
 using CleanArchitecture.Domain.Entities;
+using CleanArchitecture.Domain.Enums;
 
 namespace CleanArchitecture.Application.IRepository
 {
@@ -8,10 +9,6 @@ namespace CleanArchitecture.Application.IRepository
         Task<IReadOnlyList<Payment>> GetByUserIdAsync(string userId, CancellationToken cancellationToken = default);
         Task AddAsync(Payment payment, CancellationToken cancellationToken = default);
         void Update(Payment payment);
-
-        /// <summary>
-        /// Atomically attempts to set a new status for a payment. Returns true if the update occurred.
-        /// </summary>
-        Task<bool> TryUpdateStatusAsync(string reference, string newStatus, CancellationToken cancellationToken = default);
+        Task<bool> TryUpdateStatusAsync(string reference, PaymentStatus newStatus, CancellationToken cancellationToken = default);
     }
 }

@@ -5,6 +5,8 @@ using CleanArchitecture.Application.Payments.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace CleanArchitecture.Api.Controllers
 {
@@ -15,6 +17,9 @@ namespace CleanArchitecture.Api.Controllers
     {
      
         [HttpPost("initialize")]
+        [SwaggerOperation(Summary = "Initialize a payment", Tags = new[] { "Payments" })]
+        [ProducesResponseType(typeof(InitializePaymentResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<InitializePaymentResponse>> Initialize([FromBody] InitializePaymentRequest request)
         {
             var result = await mediator.Send(new InitializePaymentCommand(request));
@@ -23,6 +28,9 @@ namespace CleanArchitecture.Api.Controllers
         }
 
         [HttpGet("verify/{reference}")]
+        [SwaggerOperation(Summary = "Verify payment by reference", Tags = new[] { "Payments" })]
+        [ProducesResponseType(typeof(VerifyPaymentResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<VerifyPaymentResponse>> Verify(string reference)
         {
             var result = await mediator.Send(new VerifyPaymentCommand(reference));
@@ -32,6 +40,9 @@ namespace CleanArchitecture.Api.Controllers
 
         [AllowAnonymous]
         [HttpPost("webhook")]
+        [SwaggerOperation(Summary = "Paystack webhook endpoint", Description = "Receives webhook events from Paystack", Tags = new[] { "Payments" })]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Webhook()
         {
             // Read raw body for signature verification
@@ -54,6 +65,9 @@ namespace CleanArchitecture.Api.Controllers
         }
 
         [HttpGet("my-transactions")]
+        [SwaggerOperation(Summary = "Get transactions for current user", Tags = new[] { "Payments" })]
+        [ProducesResponseType(typeof(List<PaymentResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<List<PaymentResponse>>> GetMyTransactions()
         {
             var userId = currentUserService.GetUserId();

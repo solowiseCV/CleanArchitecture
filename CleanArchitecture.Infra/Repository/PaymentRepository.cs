@@ -1,5 +1,6 @@
 using CleanArchitecture.Application.IRepository;
 using CleanArchitecture.Domain.Entities;
+using CleanArchitecture.Domain.Enums;
 using CleanArchitecture.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,16 +35,10 @@ namespace CleanArchitecture.Infrastructure.Repository
 
         public void Update(Payment payment)
         {
-            // EF Core will check rowversion when SaveChanges is called; exceptions may bubble up
+         
             context.Payments.Update(payment);
         }
-
-        /// <summary>
-        /// Attempts to update the status of a payment atomically.
-        /// Returns true if the status was changed, false if the payment was not found or already had the target status.
-        /// Concurrency exceptions are swallowed and treated as a failure so callers can retry if desired.
-        /// </summary>
-        public async Task<bool> TryUpdateStatusAsync(string reference, string newStatus, CancellationToken cancellationToken = default)
+        public async Task<bool> TryUpdateStatusAsync(string reference, PaymentStatus newStatus, CancellationToken cancellationToken = default)
         {
             var payment = await context.Payments.FirstOrDefaultAsync(p => p.Reference == reference, cancellationToken);
             if (payment == null || payment.Status == newStatus)
@@ -57,7 +52,6 @@ namespace CleanArchitecture.Infrastructure.Repository
             }
             catch (DbUpdateConcurrencyException)
             {
-                // another process updated the row first
                 return false;
             }
         }

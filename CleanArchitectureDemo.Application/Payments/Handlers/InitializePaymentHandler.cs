@@ -3,6 +3,7 @@ using CleanArchitecture.Application.IRepository;
 using CleanArchitecture.Application.IService;
 using CleanArchitecture.Application.Payments.Commands;
 using CleanArchitecture.Domain.Entities;
+using CleanArchitecture.Domain.Enums;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -31,7 +32,7 @@ namespace CleanArchitecture.Application.Payments.Handlers
                     UserId = userId,
                     Amount = request.Request.Amount,
                     Reference = response.Data.Reference,
-                    Status = "Pending",
+                    Status = PaymentStatus.Pending,
                     TransactionDate = DateTime.UtcNow
                 };
 

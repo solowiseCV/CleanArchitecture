@@ -4,6 +4,7 @@ using CleanArchitecture.Application.IService;
 using CleanArchitecture.Application.Payments.Commands;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using CleanArchitecture.Domain.Enums;
 
 namespace CleanArchitecture.Application.Payments.Handlers
 {
@@ -27,7 +28,7 @@ namespace CleanArchitecture.Application.Payments.Handlers
             }
 
             // try to atomically flip status
-            var updated = await unitOfWork.Payments.TryUpdateStatusAsync(payload.Data.Reference, "Success", cancellationToken);
+            var updated = await unitOfWork.Payments.TryUpdateStatusAsync(payload.Data.Reference, PaymentStatus.Success, cancellationToken);
 
             if (!updated)
             {
@@ -36,7 +37,7 @@ namespace CleanArchitecture.Application.Payments.Handlers
                 {
                     logger.LogWarning("Webhook received for non-existent payment reference: {Reference}", payload.Data.Reference);
                 }
-                else if (existing.Status == "Success")
+                else if (existing.Status == PaymentStatus.Success)
                 {
                     logger.LogInformation("Idempotency: Webhook already processed for reference: {Reference}", payload.Data.Reference);
                 }
