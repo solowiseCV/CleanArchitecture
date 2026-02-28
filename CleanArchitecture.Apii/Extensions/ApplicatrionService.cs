@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 using CleanArchitecture.Infrastructure.Identity;
 
 namespace CleanArchitecture.API.Extensions
@@ -18,12 +19,21 @@ namespace CleanArchitecture.API.Extensions
 
         services.AddSwaggerGen(c =>
         {
+            c.EnableAnnotations();
             c.SwaggerDoc("v1", new OpenApiInfo
             {
                 Title = "Movie Api",
                 Version = "v1",
                 Description = "Movie Services to Authenticate user"
             });
+
+            // Include XML comments (from generated XML file)
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            if (File.Exists(xmlPath))
+            {
+                c.IncludeXmlComments(xmlPath);
+            }
 
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {

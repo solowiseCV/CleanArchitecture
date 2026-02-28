@@ -4,6 +4,7 @@ using CleanArchitecture.Application.IService;
 using CleanArchitecture.Application.Payments.Commands;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using CleanArchitecture.Domain.Enums;
 
 namespace CleanArchitecture.Application.Payments.Handlers
 {
@@ -22,7 +23,7 @@ namespace CleanArchitecture.Application.Payments.Handlers
             if (response.Status && response.Data != null && response.Data.Status == "success")
             {
                 // atomically update status; repository handles concurrency and returns whether an update occurred
-                var updated = await unitOfWork.Payments.TryUpdateStatusAsync(request.Reference, "Success", cancellationToken);
+                var updated = await unitOfWork.Payments.TryUpdateStatusAsync(request.Reference, PaymentStatus.Success, cancellationToken);
                 if (updated)
                 {
                     logger.LogInformation("Payment verified successfully. Status updated and granting premium. Reference: {Reference}", request.Reference);

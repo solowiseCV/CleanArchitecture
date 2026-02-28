@@ -11,16 +11,9 @@ using System.Text;
 
 namespace CleanArchitecture.Infrastructure.Repository
 {
-    public class TokenService : ITokenService
+    public class TokenService(IConfiguration _configuration, UserManager<ApplicationUser> _userManager) : ITokenService
     {
-        private readonly IConfiguration _configuration;
-        private readonly UserManager<ApplicationUser> _userManager;
-
-        public TokenService(IConfiguration configuration, UserManager<ApplicationUser> userManager)
-        {
-            _configuration = configuration;
-            _userManager = userManager;
-        }
+       
 
         public async Task<string> CreateToken(IdentityUser user)
         {
@@ -30,10 +23,10 @@ namespace CleanArchitecture.Infrastructure.Repository
 
             var authClaims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.UserName!),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.Email, user.Email!),
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new(ClaimTypes.Name, user.UserName!),
+                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new(ClaimTypes.Email, user.Email!),
+                new(ClaimTypes.NameIdentifier, user.Id),
             };
 
             if (applicationUser != null)

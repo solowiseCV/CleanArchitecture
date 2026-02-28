@@ -1,3 +1,5 @@
+using CleanArchitecture.Domain.Enums;
+
 namespace CleanArchitecture.Domain.Entities
 {
     public class Payment
@@ -6,10 +8,9 @@ namespace CleanArchitecture.Domain.Entities
         public string UserId { get; set; } = string.Empty;
         public decimal Amount { get; set; }
         public string Reference { get; set; } = string.Empty;
-        public string Status { get; set; } = "Pending"; // Pending, Success, Failed
+        public PaymentStatus Status { get; set; } = PaymentStatus.Pending;
         public DateTime TransactionDate { get; set; } = DateTime.UtcNow;
 
-        // concurrency token for optimistic locking; EF will automatically check this on updates
         public byte[]? RowVersion { get; set; }
     }
 }

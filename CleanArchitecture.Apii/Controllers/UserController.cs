@@ -2,6 +2,8 @@ using CleanArchitecture.Application.DTOs;
 using CleanArchitecture.Application.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace CleanArchitecture.Api.Controllers
 {
@@ -10,6 +12,9 @@ namespace CleanArchitecture.Api.Controllers
     public class UserController(IUserServices userServices) : ControllerBase
     {
         [HttpPost("register")]
+        [SwaggerOperation(Summary = "Register a new user", Tags = new[] { "Users" })]
+        [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<UserResponse>> Register(UserRegisterRequest request)
         {
             var result = await userServices.RegisterAsync(request);
@@ -17,6 +22,9 @@ namespace CleanArchitecture.Api.Controllers
         }
 
         [HttpPost("login")]
+        [SwaggerOperation(Summary = "Login user and return token", Tags = new[] { "Users" })]
+        [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<UserResponse>> Login(UserLoginRequest request)
         {
             var result = await userServices.LoginAsync(request);
@@ -25,6 +33,9 @@ namespace CleanArchitecture.Api.Controllers
 
         [Authorize]
         [HttpGet("current")]
+        [SwaggerOperation(Summary = "Get current authenticated user", Tags = new[] { "Users" })]
+        [ProducesResponseType(typeof(CurrentUserResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<CurrentUserResponse>> GetCurrent()
         {
             var result = await userServices.GetCurrentUserAsync();
@@ -32,6 +43,9 @@ namespace CleanArchitecture.Api.Controllers
         }
 
         [HttpGet("{id}")]
+        [SwaggerOperation(Summary = "Get user by id", Tags = new[] { "Users" })]
+        [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<UserResponse>> GetById(Guid id)
         {
             var result = await userServices.GetByIdAsync(id);
@@ -39,6 +53,9 @@ namespace CleanArchitecture.Api.Controllers
         }
 
         [HttpPut("{id}")]
+        [SwaggerOperation(Summary = "Update user", Tags = new[] { "Users" })]
+        [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<UserResponse>> Update(Guid id, UpdateUserRequest request)
         {
             var result = await userServices.UpdateAsync(id, request);
@@ -46,6 +63,9 @@ namespace CleanArchitecture.Api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [SwaggerOperation(Summary = "Delete user", Tags = new[] { "Users" })]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(Guid id)
         {
             await userServices.DeleteAsync(id);
@@ -53,6 +73,8 @@ namespace CleanArchitecture.Api.Controllers
         }
 
         [HttpPost("refresh-token")]
+        [SwaggerOperation(Summary = "Refresh authentication token", Tags = new[] { "Users" })]
+        [ProducesResponseType(typeof(CurrentUserResponse), StatusCodes.Status200OK)]
         public async Task<ActionResult<CurrentUserResponse>> RefreshToken(RefreshTokenRequest request)
         {
             var result = await userServices.RefreshTokenAsync(request);
@@ -60,6 +82,8 @@ namespace CleanArchitecture.Api.Controllers
         }
 
         [HttpPost("revoke-token")]
+        [SwaggerOperation(Summary = "Revoke a refresh token", Tags = new[] { "Users" })]
+        [ProducesResponseType(typeof(RevokeRefreshTokenResponse), StatusCodes.Status200OK)]
         public async Task<ActionResult<RevokeRefreshTokenResponse>> RevokeToken(RefreshTokenRequest request)
         {
             var result = await userServices.RevokeRefreshToken(request);

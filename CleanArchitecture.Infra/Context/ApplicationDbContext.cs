@@ -26,6 +26,9 @@ namespace CleanArchitecture.Infrastructure.Context
                 entity.HasIndex(p => p.Reference).IsUnique();
                 entity.Property(p => p.RowVersion).IsRowVersion();
 
+                // map enum to string and ensure it's required
+                entity.Property(p => p.Status).HasConversion<string>().IsRequired();
+
                 // ensure amount precision if needed
                 entity.Property(p => p.Amount).HasPrecision(18, 2);
             });
